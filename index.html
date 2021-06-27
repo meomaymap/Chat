@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>Chat đơn giản</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
   <style>
     .me {
       text-align: right;
@@ -33,8 +34,12 @@
           // Create talk element
           const talk = document.createElement('div');
           // Set peer's message
-          talk.innerText = await res.text();
+          //talk.innerText = await res.text();
+          var str = await res.text();
+          
           // Add peer's message
+          var str = CryptoJS.AES.decrypt(str, "22041976");
+          talk.innerText = str;
           talks.appendChild(talk);
         } catch(err) {
           console.error(err);
@@ -45,9 +50,11 @@
     // Send your message
     function send() {
       // Send your message
+      var str = CryptoJS.AES.encrypt(message.value, "22041976");
       fetch(`https://ppng.io/${your_id.value}-${peer_id.value}`, {
         'method': 'POST',
-        body: message.value
+        body: str
+        //body: message.value
       });
       // Create talk element
       const talk = document.createElement('div');
